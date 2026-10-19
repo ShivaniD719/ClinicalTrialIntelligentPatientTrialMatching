@@ -217,8 +217,3 @@ This means the classifier correctly predicted 1,602 of 2,000 proxy labels. It mi
 Notebook
 
 Jupyter notebook: https://github.com/ShivaniD719/ClinicalTrialIntelligentPatientTrialMatching/blob/main/IntelligentClinicalTrialPatientMatching.ipynb
-
-
-Tools Used
-
-Python, pandas, NumPy, gzip/json, Seaborn, Matplotlib, scikit-learn, Jupyter Notebook, and the ClinicalTrials.gov API (requests was used for the original one-time data collection).
