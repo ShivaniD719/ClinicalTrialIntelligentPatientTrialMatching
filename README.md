@@ -191,7 +191,7 @@ Data Modeling
 
 Main metric: F1-score for the positive keyword-match class. F1 balances precision (how many predicted matches were labeled matches) and recall (how many labeled matches were found). Accuracy alone can be misleading because most trials already belong to the positive class. I will also inspect class-specific results and the confusion matrix.
 
-Evaluation results
+### Evaluation results
 
 I evaluated both models on a held-out test set of 2,000 records (20% of the dataset). The positive class is keyword match.
 
@@ -212,7 +212,60 @@ The Logistic Regression confusion matrix (actual labels as rows, predictions as 
 This means the classifier correctly predicted 1,602 of 2,000 proxy labels. It missed 282 keyword-matching records and incorrectly predicted a match for 116 non-matching records. I would not describe this model as better overall without specifying the metric: it improves minority-class recognition and macro F1, but not accuracy or positive-class F1.
 
 
+#### Model Comparison
+For the final phase of my project, I compared four classification models to identify which performed best at predicting keyword-based lung cancer trial relevance.
 
+I used TF-IDF to convert clinical trial text into numerical features. I compared the models using stratified 5-fold cross-validation and selected macro F1-score as my primary evaluation metric because the dataset has more keyword matches than non-matches.
+
+|Model|Mean Accuracy|Mean Macro F1|
+|------------------|-------:|----:|
+|Dummy Classifier|0.820|0.450|
+|Logistic Regression|0.864|0.681|
+|Naive Bayes|0.841|0.587|
+|Linear SVM|0.868|0.729|
+
+Linear SVM performed best during cross-validation.
+
+#### Hyperparameter Tuning
+I used GridSearchCV to test different TF-IDF and Linear SVM settings.
+
+The best parameters were:
+
+Regularization parameter C: 1
+Minimum document frequency: 5
+N-gram range: (1, 1)
+The best cross-validation macro F1-score was 0.731, a small improvement over the original score of 0.729.
+
+#### Final Model Evaluation
+I evaluated the tuned Linear SVM model on a separate test dataset containing 2,000 clinical trials.
+
+| Metric | Score |
+| :--- | :--- |
+| **Accuracy** | 0.855 |
+| **Macro Precision** | 0.772 |
+| **Macro Recall** | 0.675 |
+| **Macro F1** | 0.705 |
+
+The confusion matrix showed that the model correctly identified 1,568 keyword-matching trials and 142 non-matching trials. It incorrectly classified 219 non-matching trials as matches and missed 71 matching trials.
+
+Key Findings
+The results showed me that accuracy alone is not enough to evaluate an imbalanced classification problem.
+
+Linear SVM performed better than the dummy baseline and achieved the highest cross-validation macro F1-score among the models I tested.
+
+However, the model had difficulty recognizing non-matching trials. This suggests that the current approach may include irrelevant trials in its recommendations.
+
+Project Limitations
+The classification labels were created using lung cancer terminology in the clinical trial condition fields. They are not independently validated clinical eligibility labels.
+
+Although the project is focused on intelligent patient–trial matching, the current model is an initial trial-relevance classifier. It does not yet determine whether an individual patient qualifies for a clinical trial.
+
+Recommendations and Future Work
+For the next phase, I would like to improve the model by extracting clinical information such as disease stage, biomarkers, previous treatments, and other eligibility requirements.
+
+I would also like to explore NLP methods for comparing patient profiles with clinical trial inclusion and exclusion criteria.
+
+The longer-term goal is to develop a system that can help narrow down potentially relevant clinical trials for review by qualified healthcare professionals.
 
 Notebook
 
